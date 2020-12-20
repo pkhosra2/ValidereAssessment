@@ -3,6 +3,7 @@ import numpy as np
 import math
 import os
 from uncertainties import ufloat_fromstr, nominal_value
+from pandas import errors
 
 
 class DistillationCalculator(object):
@@ -14,13 +15,18 @@ class DistillationCalculator(object):
     def get_data(self):
 
         # creating our file path for the csv file taken from 'CrudeMonitor.ca'
+        # please make sure that the CSV file in question lies in the crudes python directory
         path = os.path.dirname(os.path.abspath(__file__))
         file_directory = path + '/crudes/crudecomp.CSV'
 
         # turning our csv file in the directory into a pandas DataFrame
-        df = pd.read_csv(file_directory, header=1)
+        try:
+            df = pd.read_csv(file_directory, header=1)
+        except FileNotFoundError:
+            print("Please make sure the csv file in question is in the proper directory!\n")
+        except errors.ParserError as detail:
+            print(detail)
 
-        # df = df.drop(0)                                    # dropping the first row in the given dataFrame
         df.drop(df.columns[-3:], axis=1, inplace=True)     # dropping the last 3 columns that have NaN
         df = df.dropna()                                   # dropping the NaN rows
 
@@ -48,7 +54,10 @@ class DistillationCalculator(object):
                     df.at[index, oil_names[1]] = nominal_value(ufloat_fromstr(oil2_df[index]))
                 except ValueError:
                     df.at[index, oil_names[1]] = df.at[index-1, oil_names[1]]
+        else:
+            print("The two oils do not have equivalent data!")
 
+        # converting our dataframe into a numerical representation to make calculations much easier
         data = df.to_numpy()
 
         return data, oil_names
@@ -65,12 +74,14 @@ class DistillationCalculator(object):
         """
 
         data, oil_names = self.get_data()
-        print("The resulting Disillation temperatures for {oil_1} and {oil_2} are the following:\n"
+
+        print("The resulting Distillation temperatures for {oil_1} and {oil_2} are the following:\n"
               .format(oil_1=oil_names[0], oil_2=oil_names[1]))
 
         for array in data:
+            # we will round our values to the nearest integer for the sake of convenience only
             temp = math.floor(array[-1]*volume2 + array[-2]*volume1)
-            print("{mass_value} : {temp}".format(mass_value=array[0], temp=temp))
+            print("{mass_value} : {temp} degC".format(mass_value=array[0], temp=temp))
 
     def main(self):
         self.getDistilationProfile(self.volume1, self.volume2)
@@ -78,7 +89,7 @@ class DistillationCalculator(object):
 
 if __name__ == "__main__":
 
-    print("Starting Distillation Profile Calculator...\n")
+    print("Starting Distillation Profile Calculator...")
     print("Please enter two values for the two oils, please make sure the values add up to 100 in percentage\n")
 
     while True:
@@ -87,13 +98,13 @@ if __name__ == "__main__":
             try:
                 volume2 = int(input("Please input the volume desired in % for the second oil\n"))
                 if (volume1 + volume2) % 100 != 0:
-                    print("Please provide two numbers that add up to 100, starting over...\n")
+                    print("Please provide two numbers that add up to 100! Starting over...\n")
                     continue
                 break
             except:
-                print("Please enter a numeric value for second oil, starting over...\n")
+                print("Please enter a numeric value for second oil! Starting over...\n")
         except:
-            print("Please enter a numeric value\n")
+            print("Please enter a numeric value!\n")
 
     # converting the user inputted percentages into fraction that will be used later on in the program
     volume1 = int(volume1)/100
