@@ -1,4 +1,4 @@
-#Validere Coding Assessment
+# Validere Coding Assessment
 
 Given the parameters of the problem the goal of this problem is
 to predict the Distillation Profile of combining any two oils 
@@ -20,12 +20,12 @@ This knowledge can be leveraged and used to create a simple model
 that will use the temperature of each oil at a given volume percentage as an 
 inputs to calculate the average temperature of the given oils.
 
-##Step 3:
+## Step 3:
 The user inputs their choices for the % values of the two oils in question.
 This part of the program will have tests written to catch values that are not numeric and total 
 percentages that do not amount to 100%. 
 
-##Step 4:
+## Step 4:
 Once the volumes have been obtained, the main of the program runs a method `getData()` that will retrieve the
 CSV file from the specified location and attempt to parse it. Here, the program will test to see if the 
 CSV is put in the proper directory and if the CSV is in the correct formatting, raising an exception for each.
@@ -49,7 +49,7 @@ If there doesn't exist a temperature that the oil is evaporated beyond the previ
 we will assume that there is no further evaporation that can be done, and we can assign the previous highest temperature
 to it. This is done using the index of the dataframe records for each of the two oils in question. 
 
-###Requirements
+### Requirements
 
 The following python modules/packages were used to run this program:
 
