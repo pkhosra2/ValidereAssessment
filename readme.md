@@ -1,4 +1,4 @@
-#**Validere Coding Assessment**
+#Validere Coding Assessment
 
 Given the parameters of the problem the goal of this problem is
 to predict the Distillation Profile of combining any two oils 
@@ -44,12 +44,12 @@ The two oils will be taken as their respective nominal values only. This is done
 
 
 **----ASSUMPTIONS----**
-####1. 
+#### 1. 
 If there doesn't exist a temperature that the oil is evaporated beyond the previous %,
 we will assume that there is no further evaporation that can be done, and we can assign the previous highest temperature
 to it. This is done using the index of the dataframe records for each of the two oils in question. 
 
-###**Requirements**
+###Requirements
 
 The following python modules/packages were used to run this program:
 
